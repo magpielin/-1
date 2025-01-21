@@ -1,25 +1,14 @@
 #ifndef __CGQ_H
 #define __CGQ_H	 
 #include "sys.h"
-//////////////////////////////////////////////////////////////////////////////////	 
-//±¾³ÌĞòÖ»¹©Ñ§Ï°Ê¹ÓÃ£¬Î´¾­×÷ÕßĞí¿É£¬²»µÃÓÃÓÚÆäËüÈÎºÎÓÃÍ¾
-//ALIENTEKÕ½½¢STM32¿ª·¢°å
-//LEDÇı¶¯´úÂë	   
-//ÕıµãÔ­×Ó@ALIENTEK
-//¼¼ÊõÂÛÌ³:www.openedv.com
-//ĞŞ¸ÄÈÕÆÚ:2012/9/2
-//°æ±¾£ºV1.0
-//°æÈ¨ËùÓĞ£¬µÁ°æ±Ø¾¿¡£
-//Copyright(C) ¹ãÖİÊĞĞÇÒíµç×Ó¿Æ¼¼ÓĞÏŞ¹«Ë¾ 2009-2019
-//All rights reserved									  
-////////////////////////////////////////////////////////////////////////////////// 
+
 
 #define CG_Z1  GPIO_ReadInputDataBit(GPIOA,GPIO_Pin_4)
 #define CG_Z2  GPIO_ReadInputDataBit(GPIOA,GPIO_Pin_5)
 //#define CG_Z3  GPIO_ReadInputDataBit(GPIOA,GPIO_Pin_8)
 #define CG_Y1  GPIO_ReadInputDataBit(GPIOA,GPIO_Pin_1)
 #define CG_Y2  GPIO_ReadInputDataBit(GPIOA,GPIO_Pin_0)
-void CGQ_Init(void);//³õÊ¼»¯
+void CGQ_Init(void);//åˆå§‹åŒ–
 
 		 				    
 #endif

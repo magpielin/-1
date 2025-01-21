@@ -1,17 +1,4 @@
-/******************** (C) 1209 Lab **************************
- * ÎÄ¼şÃû  : UltrasonicWave.c
- * ÃèÊö    £º³¬Éù²¨²â¾àÄ£¿é£¬UltrasonicWave_Configuration£¨£©º¯Êı
-             ³õÊ¼»¯³¬ÉùÄ£¿é£¬UltrasonicWave_StartMeasure£¨£©º¯Êı
-			 Æô¶¯²â¾à£¬²¢½«²âµÃµÄÊı¾İÍ¨¹ı´®¿Ú1´òÓ¡³öÀ´         
- * ÊµÑéÆ½Ì¨£ºMini STM32¿ª·¢°å  STM32F103RBT6
- * Ó²¼şÁ¬½Ó£º------------------
- *          | PC8  - TRIG      |
- *          | PC7  - ECHO      |
- *           ------------------
- * ¿â°æ±¾  £ºST3.5.0
- *
- * ×÷Õß    £ºLee 
-*********************************************************************************/
+
 
 #include "UltrasonicWave.h"
 #include "usart.h"
@@ -28,14 +15,14 @@ char DisNum[5];
 #define	TRIG_PIN       GPIO_Pin_8   //TRIG       
 #define	ECHO_PIN       GPIO_Pin_7	//ECHO   
 
-float UltrasonicWave_Distance;      //¼ÆËã³öµÄ¾àÀë    
+float UltrasonicWave_Distance;      //è®¡ç®—å‡ºçš„è·ç¦»    
 
 
 /*
- * º¯ÊıÃû£ºUltrasonicWave_Configuration
- * ÃèÊö  £º³¬Éù²¨Ä£¿éµÄ³õÊ¼»¯
- * ÊäÈë  £ºÎŞ
- * Êä³ö  £ºÎŞ	
+ * å‡½æ•°åï¼šUltrasonicWave_Configuration
+ * æè¿°  ï¼šè¶…å£°æ³¢æ¨¡å—çš„åˆå§‹åŒ–
+ * è¾“å…¥  ï¼šæ— 
+ * è¾“å‡º  ï¼šæ— 	
  */
 void UltrasonicWave_Configuration(void)
 {
@@ -43,33 +30,33 @@ void UltrasonicWave_Configuration(void)
 	EXTI_InitTypeDef EXTI_InitStructure;
  	NVIC_InitTypeDef NVIC_InitStructure;
 	
-	GPIO_PinRemapConfig(GPIO_Remap_SWJ_JTAGDisable , ENABLE);	//¹Ø±Õjtag
+	GPIO_PinRemapConfig(GPIO_Remap_SWJ_JTAGDisable , ENABLE);	//å…³é—­jtag
   RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA|RCC_APB2Periph_AFIO, ENABLE);
     
-  GPIO_InitStructure.GPIO_Pin = TRIG_PIN;					 //PC8½ÓTRIG
-  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;		     //ÉèÎªÍÆÍìÊä³öÄ£Ê½
+  GPIO_InitStructure.GPIO_Pin = TRIG_PIN;					 //PC8æ¥TRIG
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;		     //è®¾ä¸ºæ¨æŒ½è¾“å‡ºæ¨¡å¼
   GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;	         
-  GPIO_Init(TRIG_PORT, &GPIO_InitStructure);	                 //³õÊ¼»¯ÍâÉèGPIO 
+  GPIO_Init(TRIG_PORT, &GPIO_InitStructure);	                 //åˆå§‹åŒ–å¤–è®¾GPIO 
 
-  GPIO_InitStructure.GPIO_Pin = ECHO_PIN;				     //PC7½ÓECH0
-  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPD;		 //ÉèÎªÊäÈë
-  GPIO_Init(ECHO_PORT,&GPIO_InitStructure);						 //³õÊ¼»¯GPIOA
+  GPIO_InitStructure.GPIO_Pin = ECHO_PIN;				     //PC7æ¥ECH0
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPD;		 //è®¾ä¸ºè¾“å…¥
+  GPIO_Init(ECHO_PORT,&GPIO_InitStructure);						 //åˆå§‹åŒ–GPIOA
 	
-	 //GPIOC.7	  ÖĞ¶ÏÏßÒÔ¼°ÖĞ¶Ï³õÊ¼»¯ÅäÖÃ
+	 //GPIOC.7	  ä¸­æ–­çº¿ä»¥åŠä¸­æ–­åˆå§‹åŒ–é…ç½®
  	GPIO_EXTILineConfig(GPIO_PortSourceGPIOA,GPIO_PinSource7);
 
  	 EXTI_InitStructure.EXTI_Line=EXTI_Line7;
   	EXTI_InitStructure.EXTI_Mode = EXTI_Mode_Interrupt;	
   	EXTI_InitStructure.EXTI_Trigger = EXTI_Trigger_Rising;
   	EXTI_InitStructure.EXTI_LineCmd = ENABLE;
-  	EXTI_Init(&EXTI_InitStructure);		//¸ù¾İEXTI_InitStructÖĞÖ¸¶¨µÄ²ÎÊı³õÊ¼»¯ÍâÉèEXTI¼Ä´æÆ÷
+  	EXTI_Init(&EXTI_InitStructure);		//æ ¹æ®EXTI_InitStructä¸­æŒ‡å®šçš„å‚æ•°åˆå§‹åŒ–å¤–è®¾EXTIå¯„å­˜å™¨
 		
 			
-	NVIC_InitStructure.NVIC_IRQChannel = EXTI9_5_IRQn;			//Ê¹ÄÜ°´¼üËùÔÚµÄÍâ²¿ÖĞ¶ÏÍ¨µÀ
-  	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 2;	//ÇÀÕ¼ÓÅÏÈ¼¶2 
-  	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 2;					//×ÓÓÅÏÈ¼¶2 
-  	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;								//Ê¹ÄÜÍâ²¿ÖĞ¶ÏÍ¨µÀ
-  	NVIC_Init(&NVIC_InitStructure);  	  //¸ù¾İNVIC_InitStructÖĞÖ¸¶¨µÄ²ÎÊı³õÊ¼»¯ÍâÉèNVIC¼Ä´æÆ÷
+	NVIC_InitStructure.NVIC_IRQChannel = EXTI9_5_IRQn;			//ä½¿èƒ½æŒ‰é”®æ‰€åœ¨çš„å¤–éƒ¨ä¸­æ–­é€šé“
+  	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 2;	//æŠ¢å ä¼˜å…ˆçº§2 
+  	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 2;					//å­ä¼˜å…ˆçº§2 
+  	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;								//ä½¿èƒ½å¤–éƒ¨ä¸­æ–­é€šé“
+  	NVIC_Init(&NVIC_InitStructure);  	  //æ ¹æ®NVIC_InitStructä¸­æŒ‡å®šçš„å‚æ•°åˆå§‹åŒ–å¤–è®¾NVICå¯„å­˜å™¨
 }
 
 
@@ -80,16 +67,16 @@ void EXTI9_5_IRQHandler(void)
 {   
 		
 	
-	delay_us(10);		                      //ÑÓÊ±10us
+	delay_us(10);		                      //å»¶æ—¶10us
   if(EXTI_GetITStatus(EXTI_Line7) != RESET)
 	{
 			TIM_SetCounter(TIM2,0);
-			TIM_Cmd(TIM2, ENABLE);                                             //¿ªÆôÊ±ÖÓ
+			TIM_Cmd(TIM2, ENABLE);                                             //å¼€å¯æ—¶é’Ÿ
 		
-			while(GPIO_ReadInputDataBit(ECHO_PORT,ECHO_PIN));	                 //µÈ´ıµÍµçÆ½
+			while(GPIO_ReadInputDataBit(ECHO_PORT,ECHO_PIN));	                 //ç­‰å¾…ä½ç”µå¹³
 
-			TIM_Cmd(TIM2, DISABLE);			                                 //¶¨Ê±Æ÷2Ê§ÄÜ
-			UltrasonicWave_Distance=TIM_GetCounter(TIM2)*5*34/100.0;									 //¼ÆËã¾àÀë&&UltrasonicWave_Distance<150
+			TIM_Cmd(TIM2, DISABLE);			                                 //å®šæ—¶å™¨2å¤±èƒ½
+			UltrasonicWave_Distance=TIM_GetCounter(TIM2)*5*34/100.0;									 //è®¡ç®—è·ç¦»&&UltrasonicWave_Distance<150
 		
 	if(UltrasonicWave_Distance>0)
 	{
@@ -97,22 +84,22 @@ void EXTI9_5_IRQHandler(void)
 		sprintf(DisNum,"%1.4f",UltrasonicWave_Distance);
 	}
 		
-	EXTI_ClearITPendingBit(EXTI_Line7);  //Çå³ıEXTI7ÏßÂ·¹ÒÆğÎ»
+	EXTI_ClearITPendingBit(EXTI_Line7);  //æ¸…é™¤EXTI7çº¿è·¯æŒ‚èµ·ä½
 }
 
 }
 
 /*
- * º¯ÊıÃû£ºUltrasonicWave_StartMeasure
- * ÃèÊö  £º¿ªÊ¼²â¾à£¬·¢ËÍÒ»¸ö>10usµÄÂö³å£¬È»ºó²âÁ¿·µ»ØµÄ¸ßµçÆ½Ê±¼ä
- * ÊäÈë  £ºÎŞ
- * Êä³ö  £ºÎŞ	
+ * å‡½æ•°åï¼šUltrasonicWave_StartMeasure
+ * æè¿°  ï¼šå¼€å§‹æµ‹è·ï¼Œå‘é€ä¸€ä¸ª>10usçš„è„‰å†²ï¼Œç„¶åæµ‹é‡è¿”å›çš„é«˜ç”µå¹³æ—¶é—´
+ * è¾“å…¥  ï¼šæ— 
+ * è¾“å‡º  ï¼šæ— 	
  */
 void UltrasonicWave_StartMeasure(void)
 {
 		
-  GPIO_SetBits(TRIG_PORT,TRIG_PIN); 		  //ËÍ>10USµÄ¸ßµçÆ½£TRIG_PORT,TRIG_PINÕâÁ½¸öÔÚdefineÖĞÓĞ?
-  delay_us(20);		                      //ÑÓÊ±20US
+  GPIO_SetBits(TRIG_PORT,TRIG_PIN); 		  //é€>10USçš„é«˜ç”µå¹³î–šRIG_PORT,TRIG_PINè¿™ä¸¤ä¸ªåœ¨defineä¸­æœ‰?
+  delay_us(20);		                      //å»¶æ—¶20US
   GPIO_ResetBits(TRIG_PORT,TRIG_PIN);
 		
 }

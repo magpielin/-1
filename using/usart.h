@@ -1,17 +1,4 @@
-/**********************************************************************
-°æÈ¨ËùÓĞ£º	ß÷ÎØ´´ĞÂ¿Æ¼¼£¬2017.
-¹Ù		Íø£º	http://www.miaowlabs.com
-ÌÔ		±¦£º	https://shop275516297.taobao.com/
-ÎÄ ¼ş Ãû: 	.h
-×÷    Õß:   ß÷ÎØÊµÑéÊÒ
-°æ		±¾:   3.00
-Íê³ÉÈÕÆÚ:   2017.03.01
-¸Å		Òª: 	
 
-
-
-
-***********************************************************************/
 
 #ifndef __USART_H
 #define __USART_H
@@ -20,7 +7,7 @@
 
 #define Uart3BufferSize 128
 
-extern char Uart3Buffer[];			//À¶ÑÀÍ¨ĞÅ´®¿Ú½ÓÊÕ»º³åÇø
+extern char Uart3Buffer[];			//è“ç‰™é€šä¿¡ä¸²å£æ¥æ”¶ç¼“å†²åŒº
 extern unsigned char Uart3Index;
 
 void USART1Init(void);
